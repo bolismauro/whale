@@ -1,0 +1,22 @@
+{
+  "name": "whale",
+  "version": "0.0.1",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/plasticpanda/whale.git"
+  },
+  "author": "Emanuele Brivio",
+  "license": "BSD",
+  "gitHead": "e5f41e6c9830c258557a78ca0a3b10ecd042e0f3",
+  "bugs": {
+    "url": "https://github.com/plasticpanda/whale/issues"
+  },
+  "dependencies": {
+    "canvas": "~1.0.3"
+  }
+}
