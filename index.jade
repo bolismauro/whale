@@ -1,0 +1,54 @@
+extends layout
+
+block content
+  
+  #pattern.page
+    .page-container
+      .page-text
+        p.text-center
+          img.logo(src='/img/whale-logo.svg')
+        p.text-center
+          small a random Avatar generator
+          br
+          | for everyone on the <b>Earth</b>!
+
+        .spacer
+
+        .container-fluid
+          .row-fluid
+            form.inline.span12#gowhale(action='#', method='post')
+              fieldset.text-center
+                div.input-append
+                  input#mailaddress(type='email', name='email', placeholder='Insert your email address')
+                  button.btn(type='submit')
+                    span Sail the Sea!
+                    //img.hide(src='/img/loading.gif')
+
+        .bigspacer
+
+        p.text-center
+          span
+            | Developer? 
+            a(href='') Whale API Docs
+            |  are here!
+
+
+  #result.page
+
+    .page-container
+      .page-text
+        .page-bar
+          .container
+            .row-fluid
+              .span12
+                p.preview
+                  img(src='')
+                  input(value='', readonly, title='Click to select')
+
+            .row-fluid
+              .span12.text-center
+                .avatar-link
+                  h6 Bring more Whales to the party!
+
+
+

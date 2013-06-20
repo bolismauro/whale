@@ -1,0 +1,248 @@
+@import url("http://fonts.googleapis.com/css?family=Open+Sans:300italic,300,400italic,600");
+.open-sans,
+html,
+body {
+  font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 300;
+}
+h1,
+h2,
+h3 {
+  font-weight: 300;
+}
+h4,
+h5,
+h6 {
+  font-weight: 400;
+}
+b,
+strong {
+  font-weight: 600;
+}
+.spacer {
+  height: 40px;
+}
+.bigspacer {
+  height: 100px;
+}
+a {
+  color: #b6e4f5;
+  -webkit-transition: color 0.3s ease;
+  -moz-transition: color 0.3s ease;
+  -o-transition: color 0.3s ease;
+  -ms-transition: color 0.3s ease;
+  transition: color 0.3s ease;
+}
+a:hover {
+  outline: none;
+  text-decoration: none;
+  color: #3bb8e5;
+}
+.mCSB_scrollTools {
+  visibility: hidden !important;
+}
+html,
+body {
+  background: #fff;
+  font-size: 20px;
+  line-height: 28px;
+  -webkit-font-smoothing: antialiased;
+  color: #333;
+  height: 100%;
+  overflow: hidden;
+}
+html #content,
+body #content {
+  width: 100%;
+  height: 100%;
+}
+html .page,
+body .page {
+  background: #fff;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  -webkit-transition: opacity 1s ease, top 0.8s ease-in-out;
+  -moz-transition: opacity 1s ease, top 0.8s ease-in-out;
+  -o-transition: opacity 1s ease, top 0.8s ease-in-out;
+  -ms-transition: opacity 1s ease, top 0.8s ease-in-out;
+  transition: opacity 1s ease, top 0.8s ease-in-out;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+html .page .page-container,
+body .page .page-container {
+  display: table;
+  height: 100%;
+  width: 100%;
+}
+html .page .page-container> .page-text,
+body .page .page-container> .page-text {
+  display: table-cell;
+  vertical-align: middle;
+  width: 100%;
+}
+html .page .next,
+body .page .next {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  bottom: 30px;
+  left: 50%;
+  margin-left: -16px;
+  background: center center no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+}
+html .page .next.next-white,
+body .page .next.next-white {
+  background-image: url("../img/next-arrow-white.svg");
+}
+html .page .next.next-cyan,
+body .page .next.next-cyan {
+  background-image: url("../img/next-arrow-cyan.svg");
+}
+html #pattern,
+body #pattern {
+  background: url("../img/background.jpg") center center no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -webkit-box-shadow: inset 0 -50px 50px -50px #073363;
+  box-shadow: inset 0 -50px 50px -50px #073363;
+  z-index: 100;
+}
+html #pattern p,
+body #pattern p {
+  font-weight: 300;
+  font-size: 18px;
+  color: #fff;
+  letter-spacing: 1px;
+}
+html #pattern form fieldset input,
+body #pattern form fieldset input,
+html #pattern form fieldset button,
+body #pattern form fieldset button {
+  display: inline-block;
+  height: 50px;
+  border: none;
+  line-height: 50px;
+  padding: 0px 15px;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  -ms-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  outline: none;
+}
+html #pattern form fieldset input[disabled],
+body #pattern form fieldset input[disabled],
+html #pattern form fieldset button[disabled],
+body #pattern form fieldset button[disabled] {
+  opacity: 0.7;
+  filter: alpha(opacity=70);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
+}
+html #pattern form fieldset button,
+body #pattern form fieldset button {
+  color: #fff;
+  text-shadow: none;
+  font-weight: 600;
+  width: 140px;
+  text-align: center;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #3bb8e5), color-stop(1, #1b9ece));
+  background: -webkit-linear-gradient(top, #3bb8e5 0%, #1b9ece 100%);
+  background: -moz-linear-gradient(top, #3bb8e5 0%, #1b9ece 100%);
+  background: -o-linear-gradient(top, #3bb8e5 0%, #1b9ece 100%);
+  background: -ms-linear-gradient(top, #3bb8e5 0%, #1b9ece 100%);
+  background: linear-gradient(top, #3bb8e5 0%, #1b9ece 100%);
+  position: relative;
+}
+html #pattern form fieldset button span,
+body #pattern form fieldset button span {
+  background: no-repeat center center;
+  -webkit-transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -o-transition: all 0.5s ease;
+  -ms-transition: all 0.5s ease;
+  transition: all 0.5s ease;
+  display: block;
+}
+html #pattern form fieldset button.loading span,
+body #pattern form fieldset button.loading span {
+  background-image: url("../img/loading.gif");
+  color: transparent;
+}
+html #pattern form fieldset input,
+body #pattern form fieldset input {
+  height: 30px;
+  width: 300px;
+  line-height: 30px;
+  padding: 10px 15px;
+  border-right: 1px solid #1b9ece;
+}
+html #result,
+body #result {
+  position: relative;
+}
+html #result .palette-bar,
+body #result .palette-bar {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-transition: width 0.6s ease;
+  -moz-transition: width 0.6s ease;
+  -o-transition: width 0.6s ease;
+  -ms-transition: width 0.6s ease;
+  transition: width 0.6s ease;
+}
+html #result .page-text .page-bar,
+body #result .page-text .page-bar {
+  position: relative;
+  z-index: 100;
+}
+html #result .preview,
+body #result .preview {
+  font-size: 14px;
+  font-weight: 400;
+  text-align: center;
+}
+html #result .preview img,
+body #result .preview img {
+  width: 100px;
+  height: 100px;
+  vertical-align: middle;
+  border: 5px solid #fff;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 0 5px rgba(51,51,51,0.2);
+  box-shadow: 0 0 5px rgba(51,51,51,0.2);
+}
+html #result .preview input,
+body #result .preview input {
+  background: #fff;
+  border: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  -webkit-box-shadow: 5px 0 5px -5px rgba(51,51,51,0.2);
+  box-shadow: 5px 0 5px -5px rgba(51,51,51,0.2);
+  outline: none;
+  display: inline-block;
+  vertical-align: middle;
+  -webkit-border-top-right-radius: 5px;
+  border-top-right-radius: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  padding: 15px;
+  margin-left: -4px;
+  width: 420px;
+  text-align: center;
+  cursor: pointer;
+}
