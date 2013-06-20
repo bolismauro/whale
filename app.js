@@ -12,7 +12,7 @@ var fs = require('fs')
 require('sugar');
 
 
-function generate() {
+function generate(callback) {
   var palette = ['#423A38', '#47B8C8', '#E7EEE2', '#BDB9B1', '#D7503E']
     , canvas
     , apollo
@@ -58,12 +58,12 @@ function generate() {
     });
     
     canvas = apollo.draw();
-    fs.writeFileSync('index.html', '<html><body><img src="' + canvas.toDataURL() + '" /></body></html>');
-    clog.ok('Wrote file index.html');
+    canvas.pngStream().pipe(fs.createWriteStream(__dirname + '/out/avatar-' + new Date().valueOf() + '-' + data.random[0] + '.png'));
+    
+    clog.ok('Done');
+    callback();
   });
-  
-    
-    
 }
 
-generate();
+
+async.forever(generate);
