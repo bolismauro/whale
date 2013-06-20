@@ -8,9 +8,11 @@ var Canvas = require('canvas')
 
 var date1 = new Date();
 
+var palette = ['#423A38', '#47B8C8', '#E7EEE2', '#BDB9B1', '#D7503E'];
+
 var WIDTH = 600
   , HEIGHT = 600
-  , LEVEL = 5
+  , LEVEL = 4
   , r0 = -300
   , c0 = {x: 0, y: 0, r: -300}
   , mx
@@ -24,15 +26,39 @@ var WIDTH = 600
                                          ,
 
 
+randomPaletteColor = function () {
+  var r = Math.round(Math.random() * (palette.length - 2));
+  return palette[r + 1];
+},
+
+
+drawFirstCurvature = function(c){
+  var initialColor = palette[0];
+
+  var coord = graphToBrowser({x: c.x, y: c.y});
+  
+  ctx.beginPath();
+  ctx.rect(0, 0, WIDTH, HEIGHT);
+  ctx.fillStyle = initialColor;
+  ctx.fill();
+  ctx.closePath();
+
+  ctx.beginPath();
+  ctx.arc(coord.x, coord.y, c.r, 0, Math.PI*2, false);
+  ctx.fillStyle = initialColor;
+  ctx.fill();
+  ctx.closePath();
+}
+       ,
+
 
 
 drawCurvature = function(c){
   var coord = graphToBrowser({x: c.x, y: c.y});
 
   ctx.beginPath();
-  ctx.lineWidth = 1;
   ctx.arc(coord.x, coord.y, c.r, 0, Math.PI*2, false);
-  ctx.fillStyle = '#' + (function co(lor){   return (lor += [0,1,2,3,4,5,6,7,8,9,'a','b','c','d','e','f'][Math.floor(Math.random()*16)]) && (lor.length == 6) ?  lor : co(lor); })('');;
+  ctx.fillStyle = randomPaletteColor();
   ctx.fill();
   ctx.closePath();
 }
@@ -105,7 +131,7 @@ drawSetup = function(x, y) {
 
   ctx.clearRect ( 0 , 0 , WIDTH , HEIGHT);
 
-  drawCurvature({x: 0, y: 0, r: WIDTH/2}); // outer soddy circle
+  drawFirstCurvature({x: 0, y: 0, r: WIDTH/2}); // outer soddy circle
   drawCurvature(c1); // top soddy circle
   drawCurvature(c2); // bot soddy circle
 
@@ -117,7 +143,7 @@ drawSetup = function(x, y) {
 
 ag = function(c1, c2, c3, q, lvl){
   lvl++;
-  
+
   if(lvl === LEVEL) return;
   var c;
 
@@ -146,7 +172,7 @@ ag = function(c1, c2, c3, q, lvl){
 };
 
 
-var s, c = browserToGraph({x:150,y:Math.random()*300+150});
+var s, c = browserToGraph({x:150,y:Math.random()*500+50});
 
 
 mx = c.x;
@@ -170,9 +196,14 @@ if(Math.pow(mx,2) + Math.pow(my,2)  < Math.pow(WIDTH/2 ,2)) {
 
 var date2 = new Date();
 
-fs.writeFileSync('png.svg', canvas.toDataURL());
+fs.writeFileSync('index.html', '<img src="' + canvas.toDataURL() + '" />');
 
 var date3 = new Date();
 
 console.log('Render', date2 - date1, 'milliseconds');
 console.log('Render + Write', date3 - date1, 'milliseconds');
+
+
+setTimeout(function () {
+  throw 'pippo';
+}, 2000);
