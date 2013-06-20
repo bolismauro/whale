@@ -3,75 +3,71 @@
 'use strict';
 
 var fs = require('fs')
-  , Canvas = require('canvas')
-  , canvas = new Canvas(600, 600)
+  , Canvas = require('canvas');
+  
+var SIZE = 512
+  , HALFSIZE = SIZE / 2
+  , LEVEL = 4
+  , canvas = new Canvas(SIZE, SIZE)
   , ctx = canvas.getContext('2d');
 
 var date1 = new Date();
 
-var palette = ['#423A38', '#47B8C8', '#E7EEE2', '#BDB9B1', '#D7503E'];
 
-var WIDTH = 600
-  , HEIGHT = 600
-  , LEVEL = 4
-  , r0 = -300
-  , c0 = {x: 0, y: 0, r: -300}
-  , mx
-  , my
-  , browserToGraph
-  , graphToBrowser
-  , randomPaletteColor
-  , drawFirstCurvature
-  , drawCurvature
+var c0 = { x: 0, y: 0, r: -HALFSIZE }
+  , drawArc
   , getPoint
   , getSoddyCircle
   , drawSetup
-  , ag
-
-  , browserToGraph = function (coord) { return { x: coord.x - WIDTH / 2, y: HEIGHT / 2 - coord.y }; }
-  , graphToBrowser = function (coord) { return { x: coord.x + WIDTH / 2, y: HEIGHT / 2 - coord.y }; }
-
-
-;
-
-
-randomPaletteColor = function () {
-  var r = Math.round(Math.random() * (palette.length - 2));
-  return palette[r + 1];
-},
-
-
-drawFirstCurvature = function (c) {
-  var initialColor = palette[0];
-
-  var coord = graphToBrowser({x: c.x, y: c.y});
+  , ag;
   
-  ctx.beginPath();
-  ctx.rect(0, 0, WIDTH, HEIGHT);
-  ctx.fillStyle = initialColor;
-  ctx.fill();
-  ctx.closePath();
+  
 
+function ApollonianGasket(x, y, palette) {
+  this.cTop = { r: (HALFSIZE - y) / 2, x: 0, y: HALFSIZE - (HALFSIZE - y) / 2 };
+  this.cBottom = { r: (HALFSIZE + y) / 2, x: 0, y: -this.cTop.r };
+  this.cRight = getSoddyCircle(this.cTop, this.cBottom, c0);
+  this.cLeft = { r: this.cRight.r, x: -this.cRight.x, y: this.cRight.y };
+
+  // Draw initial palette
   ctx.beginPath();
-  ctx.arc(coord.x, coord.y, c.r, 0, Math.PI * 2, false);
-  ctx.fillStyle = initialColor;
+  ctx.rect(0, 0, SIZE, SIZE);
+  ctx.fillStyle = palette[0];
   ctx.fill();
   ctx.closePath();
+  
+  drawArc(this.cTop); // top soddy circle
+  drawArc(this.cBottom); // bot soddy circle
+  drawArc(this.cLeft); // left soddy circle
+  drawArc(this.cRight); // right soddy circle
 }
-       ,
 
 
+ApollonianGasket.protype.draw = function () {
+  s = drawSetup(c.x, c.y);
+  
+  ag(s.cTop, s.cLeft, 'edge', 'tl', 1);
+  ag(s.cTop, s.cRight, 'edge', 'tr', 1);
+  ag(s.cBottom, s.cLeft, 'edge', 'bl', 1);
+  ag(s.cBottom, s.cRight, 'edge', 'br', 1);
 
-drawCurvature = function (c) {
-  var coord = graphToBrowser({x: c.x, y: c.y});
+  ag(s.cTop, s.cBottom, s.cRight, 'tr', 1);
+  ag(s.cTop, s.cLeft, s.cBottom, 'l', 1);
+};
+
+
+  
+
+drawArc = function (c) {
+  var coord = { x: c.x + HALFSIZE, y: HALFSIZE - c.y };
 
   ctx.beginPath();
-  ctx.arc(coord.x, coord.y, c.r, 0, Math.PI * 2, false);
-  ctx.fillStyle = randomPaletteColor();
+  ctx.arc(coord.x, coord.y, c.r, 0, 2 * Math.PI, false);
+  ctx.fillStyle = palette[Math.round(Math.random() * (palette.length - 2)) + 1]; // Get random palette color, excluding background
   ctx.fill();
   ctx.closePath();
-}
-       ,
+};
+
 
 getPoint = function (c1, c2, r, q, lvl) {
   var x, y, hyp, theta, tc12, a, b, c, A, B, C, opp, adj;
@@ -123,27 +119,10 @@ getSoddyCircle = function (c1, c2, c3, q, lvl) {
   edgeC.y = point.y;
 
   return edgeC;
-},
+};
 
-drawSetup = function (x, y) {
-  var c1, c2, edgeCR, edgeCL;
-  
-  c1 = { r: (300 - y) / 2, x: 0, y: HEIGHT / 2 - (300 - y) / 2 };
-  c2 = { r: (300 + y) / 2, x: 0, y: -c1.r };
-  edgeCR = getSoddyCircle(c1, c2, c0);
-  edgeCL = { r: edgeCR.r, x: -edgeCR.x, y: edgeCR.y };
 
-  ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
-  drawFirstCurvature({x: 0, y: 0, r: WIDTH / 2}); // outer soddy circle
-  drawCurvature(c1); // top soddy circle
-  drawCurvature(c2); // bot soddy circle
-
-  drawCurvature(edgeCL); // left soddy circle
-  drawCurvature(edgeCR); // right soddy circle
-  
-  return { cTop: c1, cBottom: c2, cLeft: edgeCL, cRight: edgeCR };
-},
 
 ag = function (c1, c2, c3, q, lvl) {
   var c;
@@ -155,7 +134,7 @@ ag = function (c1, c2, c3, q, lvl) {
   
   if (c3 === 'edge') {
     c = getSoddyCircle(c1, c2, c0, q, lvl);
-    drawCurvature(c);
+    drawArc(c);
     
     ag(c1, c, 'edge', q, lvl);
     ag(c, c2, 'edge', q, lvl);
@@ -173,7 +152,7 @@ ag = function (c1, c2, c3, q, lvl) {
       if (c.r < 0) {
         return;
       } else {
-        drawCurvature(c);
+        drawArc(c);
         ag(c1, c2, c, q, lvl);
         ag(c2, c3, c, q, lvl);
         ag(c1, c, c3, q, lvl);
@@ -185,38 +164,33 @@ ag = function (c1, c2, c3, q, lvl) {
 };
 
 
-var s, c = browserToGraph({ x: 150, y: Math.random() * 500 + 50});
 
-mx = c.x;
-my = c.y;
-
-if (mx === 0) {
-  mx = 0.00001;
-}
-
-if (my === 0) {
-  my = 0.00001;
-}
-
-//don't show anything outside of the circle
-if (Math.pow(mx, 2) + Math.pow(my, 2)  < Math.pow(WIDTH / 2, 2)) {
-  s = drawSetup(mx, my);
+function generate() {
+  var s
+    , c
+    , palette;
+    
+  c = { x: 150 - HALFSIZE, y: HALFSIZE - Math.random() * 500 + 50 };
+  c.x = c.x || 0.00001;
+  c.y = c.y || 0.00001;
   
-  ag(s.cTop, s.cLeft, 'edge', 'tl', 1);
-  ag(s.cTop, s.cRight, 'edge', 'tr', 1);
-  ag(s.cBottom, s.cLeft, 'edge', 'bl', 1);
-  ag(s.cBottom, s.cRight, 'edge', 'br', 1);
+  palette = ['#423A38', '#47B8C8', '#E7EEE2', '#BDB9B1', '#D7503E']; // Get random palette from kuler
+  
+  var apollo = new ApollonianGasket(c.x, c.y);
+  apollo.draw();
+  
+  
 
-  ag(s.cTop, s.cBottom, s.cRight, 'tr', 1);
-  ag(s.cTop, s.cLeft, s.cBottom, 'l', 1);
+  var date2 = new Date();
+
+  fs.writeFileSync('index.html', '<img src="' + canvas.toDataURL() + '" />');
+
+  var date3 = new Date();
+
+  console.log('Render', date2 - date1, 'milliseconds');
+  console.log('Render + Write', date3 - date1, 'milliseconds');
+
 }
 
-
-var date2 = new Date();
-
-fs.writeFileSync('index.html', '<img src="' + canvas.toDataURL() + '" />');
-
-var date3 = new Date();
-
-console.log('Render', date2 - date1, 'milliseconds');
-console.log('Render + Write', date3 - date1, 'milliseconds');
+generate();
+throw new Error();
