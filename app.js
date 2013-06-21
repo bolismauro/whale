@@ -39,6 +39,7 @@ var s3client
   , app = connect()
       .use(connect.query())
       .use(connect.responseTime())
+      .use(utils.allowCORS())
       .use(validate)
       .use(get)
       .use(generate);
