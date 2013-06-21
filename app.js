@@ -67,6 +67,7 @@ function validate(req, res, next) {
 function get(req, res, next) {
   var email = req.query.email
     , printUrl = !!req.query.url
+    , printMeta = !!req.query.meta
     , key = utils.makeKey(email)
     , url;
     
@@ -86,6 +87,11 @@ function get(req, res, next) {
         res.statusCode = 200;
         res.write(url);
         res.end();
+      } else if (printMeta) {
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.write(JSON.stringify({ url: url, meta: doc.meta || {}, created_on: doc.created_on }));
+        res.end();
       } else {
         utils.redirectKey(res, url);
       }
@@ -96,18 +102,20 @@ function get(req, res, next) {
 
 function generate(req, res) {
   var email = req.query.email
-    , printUrl = !!req.query.url;
+    , printUrl = !!req.query.url
+    , printMeta = !!req.query.meta;
 
   async.waterfall([
   
     function _generator(done) {
-      _generateHelper(function (err, buffer) {
-        done(err, buffer);
+      _generateHelper(function (err, res) {
+        done(err, res);
       });
     },
     
-    function _upload(buffer, done) {
-      var key = utils.makeKey(email);
+    function _upload(res, done) {
+      var key = utils.makeKey(email)
+        , buffer = res.buffer;
       
       s3client.putObject({
         Bucket: AWS_BUCKET,
@@ -121,26 +129,32 @@ function generate(req, res) {
           return done(err);
         }
         
-        done(null, key);
+        done(null, key, res);
       });
     },
     
-    function _save(key, done) {
-      db.insert({
+    function _save(key, data, done) {
+      var doc = {
         email: email
       , s3key: key + '.png'
       , created_on: new Date()
-      }, key, function (err) {
+      , meta: {
+          palette: data.palette
+        , agparam: data.random
+        }
+      };
+      
+      db.insert(doc, key, function (err) {
         if (err) {
           clog.error('Error saving document to CouchDB', err);
           return done(err);
         }
         
-        done(null, key);
+        done(null, key, doc);
       });
     }
     
-  ], function (err, key) {
+  ], function (err, key, doc) {
     if (err) {
       clog.error('Error', err);
       throw err;
@@ -151,6 +165,11 @@ function generate(req, res) {
     if (printUrl) {
       res.statusCode = 200;
       res.write(url);
+      res.end();
+    } else if (printMeta) {
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      res.write(JSON.stringify({ url: url, meta: doc.meta || {}, created_on: doc.created_on }));
       res.end();
     } else {
       utils.redirectKey(res, url);
@@ -206,6 +225,12 @@ function _generateHelper(callback) {
     , random: data.random[0]
     });
     
-    apollo.draw().toBuffer(callback);
+    apollo.draw().toBuffer(function (err, buf) {
+      callback(err, {
+        buffer: buf,
+        random: data.random[0],
+        palette: data.colors
+      });
+    });
   });
 }
