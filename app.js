@@ -9,13 +9,16 @@ var clog = require('clog')
   , random = require('node-random')
   , connect = require('connect')
   , nano = require('nano')
+  , postmark = require('postmark')
   , AWS = require('aws-sdk')
   , asciify = require('asciify')
+  , uuid = require('uuid')
   , fs = require('fs')
   , http = require('http')
   , ApollonianGasket = require('./lib/ApollonianGasket')
   , utils = require('./lib/utils');
 
+require('string-format');
 require('sugar');
 require('colors');
 
@@ -25,7 +28,9 @@ var AWS_ACCESS_KEY_ID = process.config.AWS_ACCESS_KEY_ID
   , AWS_SECRET_ACCESS_KEY = process.config.AWS_SECRET_ACCESS_KEY
   , AWS_BUCKET = process.config.AWS_BUCKET
   , DATABASE_URL = process.config.DATABASE_URL
-  , CDN_DOMAIN = process.config.CDN_DOMAIN;
+  , CDN_DOMAIN = process.config.CDN_DOMAIN
+  , POSTMARK_APIKEY = process.config.POSTMARK_APIKEY
+  , WHALE_API_ENDPOINT = 'http://api.whale.im'; //@TODO: move to config
 
 
 // AWS SDK config
@@ -36,6 +41,7 @@ s3client = new AWS.S3();
 
 var s3client
   , db = nano(DATABASE_URL)
+  , postmark = postmark(POSTMARK_APIKEY)
   , app = connect()
       .use(connect.query())
       .use(connect.responseTime())
@@ -69,6 +75,7 @@ function get(req, res, next) {
   var email = req.query.email
     , printUrl = !!req.query.url
     , printMeta = !!req.query.meta
+    , force = req.query.force
     , key = utils.makeKey(email)
     , url;
     
@@ -82,19 +89,32 @@ function get(req, res, next) {
         next(err);
       }
     } else {
-      url = utils.makeImageURL(CDN_DOMAIN, key);
+      clog.debug('force', force, doc.token);
       
-      if (printUrl) {
-        res.statusCode = 200;
-        res.write(url);
-        res.end();
-      } else if (printMeta) {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.write(JSON.stringify({ url: url, meta: doc.meta || {}, created_on: doc.created_on }));
-        res.end();
+      if (force && force === doc.token) {
+        db.destroy(doc._id, doc._rev, function (err) {
+          if (err) {
+            return next(err);
+          } else {
+            return next();
+          }
+        });
+        
       } else {
-        utils.redirectKey(res, url);
+        url = utils.makeImageURL(CDN_DOMAIN, key);
+        
+        if (printUrl) {
+          res.statusCode = 200;
+          res.write(url);
+          res.end();
+        } else if (printMeta) {
+          res.statusCode = 200;
+          res.setHeader('Content-Type', 'application/json');
+          res.write(JSON.stringify({ url: url, meta: doc.meta || {}, created_on: doc.created_on }));
+          res.end();
+        } else {
+          utils.redirectKey(res, url);
+        }
       }
     }
   });
@@ -104,7 +124,8 @@ function get(req, res, next) {
 function generate(req, res) {
   var email = req.query.email
     , printUrl = !!req.query.url
-    , printMeta = !!req.query.meta;
+    , printMeta = !!req.query.meta
+    , force = req.query.force;
 
   async.waterfall([
   
@@ -135,13 +156,18 @@ function generate(req, res) {
     },
     
     function _save(key, data, done) {
+      var token = force || uuid.v4()
+        , url = utils.makeImageURL(CDN_DOMAIN, key);
+      
       var doc = {
         email: email
       , s3key: key + '.png'
+      , token: token
       , created_on: new Date()
       , meta: {
           palette: data.palette
         , agparam: data.random
+        , base64: data.buffer.toString('base64')
         }
       };
       
@@ -151,17 +177,39 @@ function generate(req, res) {
           return done(err);
         }
         
-        done(null, key, doc);
+        done(null, key, doc, url);
+      });
+    },
+    
+    function _sendmail(key, doc, url, done) {
+      fs.readFile('mail_template.html', { encoding: 'utf8' }, function (err, template) {
+        if (err) {
+          return done(err);
+        }
+        
+        // We *should* prevent cloudfront from caching the object if the user does not like his avatar
+        var url_no_cache = url + '?r=' + Math.random();
+        
+        postmark.send({
+          From: 'hello@plasticpanda.com',
+          To: doc.email,
+          Subject: 'whale.im | You are now sailing the sea!',
+          HtmlBody: template.format({ email: doc.email, url: url_no_cache, token: doc.token })
+        }, function (err) {
+          if (err) {
+            return done(err);
+          }
+          
+          done(null, key, doc, url);
+        });
       });
     }
     
-  ], function (err, key, doc) {
+  ], function (err, key, doc, url) {
     if (err) {
       clog.error('Error', err);
       throw err;
     }
-    
-    var url = utils.makeImageURL(CDN_DOMAIN, key);
     
     if (printUrl) {
       res.statusCode = 200;
