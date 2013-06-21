@@ -246,3 +246,57 @@ body #result .preview input {
   text-align: center;
   cursor: pointer;
 }
+html #result img.footer,
+body #result img.footer {
+  width: 300px;
+  height: 60px;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  margin-left: -150px;
+  z-index: 210;
+  max-width: none;
+}
+html #result ul.social-share,
+body #result ul.social-share {
+  margin: 0;
+  margin-right: 450px;
+  list-style: none;
+}
+html #result ul.social-share li,
+body #result ul.social-share li {
+  display: inline-block;
+  height: 32px;
+  width: 32px;
+  margin: 5px;
+}
+html #result ul.social-share li a,
+body #result ul.social-share li a {
+  display: block;
+}
+html #result ul.social-share li a img,
+body #result ul.social-share li a img {
+  height: 32px;
+  width: 32px;
+  -webkit-border-radius: 16px;
+  border-radius: 16px;
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+  background: transparent;
+  -webkit-transition: background 0.5s ease;
+  -moz-transition: background 0.5s ease;
+  -o-transition: background 0.5s ease;
+  -ms-transition: background 0.5s ease;
+  transition: background 0.5s ease;
+  -webkit-box-shadow: 0 0 5px rgba(51,51,51,0.1);
+  box-shadow: 0 0 5px rgba(51,51,51,0.1);
+}
+html #result ul.social-share li:hover a img.social-facebook,
+body #result ul.social-share li:hover a img.social-facebook {
+  background: #3b5999;
+}
+html #result ul.social-share li:hover a img.social-twitter,
+body #result ul.social-share li:hover a img.social-twitter {
+  background: #32ceff;
+}

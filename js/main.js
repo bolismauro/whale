@@ -28,7 +28,7 @@ $(function () {
       success: function(data) {
         console.log('Success', data);
 
-        $('.preview img').attr('src', data.url);
+        $('.preview img').attr('src', 'data:image/png;base64,' + data.meta.base64);
         $('.preview input').val(data.url);
 
         // Generating Palette Bar
