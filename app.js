@@ -2,26 +2,31 @@
 
 'use strict';
 
-var AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID
-  , AWS_SECRET_ACCESS_KEY = process.env.AWS_SECRET_ACCESS_KEY
-  , AWS_BUCKET = process.env.AWS_BUCKET
-  , DATABASE_URL = process.env.DATABASE_URL
-  , CDN_DOMAIN = process.env.CDN_DOMAIN;
 
-var fs = require('fs')
-  , clog = require('clog')
+var clog = require('clog')
   , async = require('async')
+  , eenv = require('eenv')
   , random = require('node-random')
   , connect = require('connect')
-  , db = require('nano')(DATABASE_URL)
+  , nano = require('nano')
   , AWS = require('aws-sdk')
   , asciify = require('asciify')
+  , fs = require('fs')
   , http = require('http')
   , ApollonianGasket = require('./lib/ApollonianGasket')
   , utils = require('./lib/utils');
 
 require('sugar');
 require('colors');
+
+eenv.loadSync({ keyfile: process.env.EENV_KEY });
+
+var AWS_ACCESS_KEY_ID = process.config.AWS_ACCESS_KEY_ID
+  , AWS_SECRET_ACCESS_KEY = process.config.AWS_SECRET_ACCESS_KEY
+  , AWS_BUCKET = process.config.AWS_BUCKET
+  , DATABASE_URL = process.config.DATABASE_URL
+  , CDN_DOMAIN = process.config.CDN_DOMAIN;
+
 
 // AWS SDK config
 AWS.config.update({ accessKeyId: AWS_ACCESS_KEY_ID, secretAccessKey: AWS_SECRET_ACCESS_KEY });
@@ -30,6 +35,7 @@ s3client = new AWS.S3();
 
 
 var s3client
+  , db = nano(DATABASE_URL)
   , app = connect()
       .use(connect.query())
       .use(connect.responseTime())
