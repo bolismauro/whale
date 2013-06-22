@@ -15,6 +15,7 @@ var clog = require('clog')
   , uuid = require('uuid')
   , fs = require('fs')
   , http = require('http')
+  , handlebars = require('handlebars')
   , ApollonianGasket = require('./lib/ApollonianGasket')
   , utils = require('./lib/utils');
 
@@ -194,7 +195,7 @@ function generate(req, res) {
           From: 'hello@plasticpanda.com',
           To: doc.email,
           Subject: 'whale.im | You are now sailing the sea!',
-          HtmlBody: template.format({ email: doc.email, url: url_no_cache, token: doc.token })
+          HtmlBody: handlebars.compile(template)({ email: doc.email, url: url_no_cache, token: doc.token, palette: doc.meta.palette })
         }, function (err) {
           if (err) {
             return done(err);

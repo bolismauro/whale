@@ -106,7 +106,7 @@
             
               <tr>
                 <td style="font-size: 15px; line-height: 24px; font-family: Helvetica, sans-serif; color: #333;" align="center">
-                  Congratulations <b>{email}</b>!
+                  Congratulations <b>{{email}}</b>!
                   <br /><br />
                 </td>
               </tr>
@@ -120,7 +120,7 @@
               <tr>
                 <td style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif; color: #333;" align="center">
                   <br />
-                  This is your brand new Avatar! You don't like it? <a href="http://www.whale.im/#{email}|{token}" style="color:#2469A0;">Get a new one!</a>
+                  This is your brand new Avatar! You don't like it? <a href="http://www.whale.im/#{{email}}|{{token}}" style="color:#2469A0;">Get a new one!</a>
                 </td>
               </tr>
 
@@ -137,11 +137,9 @@
 
             <table border="0" cellpadding="0" cellspacing="0" class="columns-container" width="100%">
               <tr>
-                <td class="force-col" valign="top" align="center" style="background:#000000;">&nbsp;</td>
-                <td class="force-col" valign="top" align="center" style="background:#111111;">&nbsp;</td>
-                <td class="force-col" valign="top" align="center" style="background:#222222;">&nbsp;</td>
-                <td class="force-col" valign="top" align="center" style="background:#333333;">&nbsp;</td>
-                <td class="force-col" valign="top" align="center" style="background:#444444;">&nbsp;</td>
+                {{#each palette}}
+                  <td class="force-col" valign="top" align="center" style="background:{{this}};">&nbsp;</td>
+                {{/each}}
               </tr>
             </table><!--/ end .columns-container-->
           </td>
