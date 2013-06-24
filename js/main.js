@@ -1,8 +1,13 @@
-/*jshint browser:true, indent:2, laxcomma:true, jquery:true, devel:true */
+/*jshint browser:true, indent:2, laxcomma:true, jquery:true */
 
 $(function () {
 
   'use strict';
+
+  
+  // Enable inputs on page load (need this for Firefox)
+  $('[type="submit"]').removeAttr('disabled');
+  $('[type="email"]').removeAttr('disabled');
 
 
   $('#gowhale').on('submit', function (e) {
@@ -26,7 +31,7 @@ $(function () {
       url: 'http://api.whale.im/?meta=1&email=' + $('#mailaddress').val(),
       dataType: 'json',
       success: function(data) {
-        console.log('Success', data);
+        //console.log('Success', data);
 
         $('.preview img').attr('src', 'data:image/png;base64,' + data.meta.base64);
         $('.preview input').val(data.url);
@@ -58,14 +63,14 @@ $(function () {
           timer = timer - 100;
 
           setTimeout(function () {      
-            console.log('bar', $bar, 100 - 100 / len * index + '%')
+            //console.log('bar', $bar, 100 - 100 / len * index + '%');
             $bar.css('width', 100 - 100 / len * index + '%');
           }, t);
         });
 
       },
       error: function (data) {
-        console.log('Error');
+        throw new Error('Error' + JSON.stringify(data));
       }
 
     });    
