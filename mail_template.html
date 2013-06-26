@@ -1,14 +1,172 @@
-<html>
-  <body>
-    <h1>Whale.im</h1>
-    <p>
-      Congratulations {email},<br />
-      This is your brand new Avatar!<br />
-      <img src="{url}" alt="Your Avatar" />
-    </p>
-    
-    <p>
-      You don't like it? <a href="http://www.whale.im/#{email}|{token}">Get a new one!</a>
-    </p>
-  </body>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="initial-scale=1.0">    <!-- So that mobile webkit will display zoomed in -->
+    <meta name="format-detection" content="telephone=no"> <!-- disable auto telephone linking in iOS -->
+
+    <title>whale.im | You are now sailing the sea!</title>
+    <style type="text/css">
+
+        /* Resets: see reset.css for details */
+        .ReadMsgBody { width: 100%; background-color: #e9e9e9;}
+        .ExternalClass {width: 100%; background-color: #e9e9e9;}
+        .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height:100%;}
+        body {-webkit-text-size-adjust:none; -ms-text-size-adjust:none;}
+        body {margin:0; padding:0;}
+        table {border-spacing:0;}
+        table td {border-collapse:collapse;}
+        .yshortcuts a {border-bottom: none !important;}
+
+
+        /* Constrain email width for small screens */
+        @media screen and (max-width: 600px) {
+            table[class="container"] {
+                width: 95% !important;
+            }
+        }
+
+        /* Give content more room on mobile */
+        @media screen and (max-width: 480px) {
+            td[class="container-padding"] {
+                padding-left: 12px !important;
+                padding-right: 12px !important;
+            }
+        }
+
+
+        /* Styles for forcing columns to rows */
+        @media only screen and (max-width : 600px) {
+
+            /* force container columns to (horizontal) blocks */
+            td[class="force-col"] {
+                display: block;
+                padding-right: 0 !important;
+            }
+            table[class="col-3"] {
+                /* unset table align="left/right" */
+                float: none !important;
+                width: 100% !important;
+
+                /* change left/right padding and margins to top/bottom ones */
+                margin-bottom: 12px;
+                padding-bottom: 12px;
+                border-bottom: 1px solid #eee;
+            }
+
+            /* remove bottom border for last column/row */
+            table[id="last-col-3"] {
+                border-bottom: none !important;
+                margin-bottom: 0;
+            }
+
+            /* align images right and shrink them a bit */
+            img[class="col-3-img"] {
+                float: right;
+                margin-left: 6px;
+                max-width: 130px;
+            }
+        }
+
+    </style>
+</head>
+<body style="margin:0; padding:10px 0;" bgcolor="#e9e9e9" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+
+<br>
+
+<!-- 100% wrapper (grey background) -->
+<table border="0" width="100%" height="100%" cellpadding="0" cellspacing="0" bgcolor="#e9e9e9">
+  <tr>
+    <td align="center" valign="top" bgcolor="#e9e9e9" style="background-color: #e9e9e9;">
+
+      <!-- 500px container (white background) -->
+      <table border="0" width="500" cellpadding="0" cellspacing="0" class="container" bgcolor="#ffffff">
+
+        <tr>
+
+          <td class="container-header" bgcolor="#e9e9e9" style="background-color:#e9e9e9; font-family: Helvetica, sans-serif; color: #333;" align="center">
+
+            <img src="http://www.whale.im/img/mail-resources/whale-logo.png" alt="Whale.im" />
+
+            <br />
+            <br />
+
+          </td>
+
+        </tr>
+        
+        <tr>
+          <td class="container-padding" bgcolor="#ffffff" style="background-color: #ffffff; padding-left: 30px; padding-right: 30px; font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif; color: #333;" align="center">
+
+            <br />
+            <br />
+
+            <table border="0" cellpadding="0" cellspacing="0" class="columns-container" width="100%">
+            
+              <tr>
+                <td style="font-size: 15px; line-height: 24px; font-family: Helvetica, sans-serif; color: #333;" align="center">
+                  Congratulations <b>{email}</b>!
+                  <br /><br />
+                </td>
+              </tr>
+
+              <tr>
+                <td style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif; color: #333;" align="center">
+                  <img src="{img}" alt="Your avatar!" />
+                </td>
+              </tr>
+
+              <tr>
+                <td style="font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif; color: #333;" align="center">
+                  <br />
+                  This is your brand new Avatar! You don't like it? <a href="http://www.whale.im/#{email}|{token}" style="color:#2469A0;">Get a new one!</a>
+                </td>
+              </tr>
+
+            </table>
+
+            <br />
+            <br />
+
+          </td>
+        </tr>
+
+        <tr>
+          <td class="container-padding" bgcolor="#ffffff" style="background-color: #ffffff; font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif; color: #333;" align="center">
+
+            <table border="0" cellpadding="0" cellspacing="0" class="columns-container" width="100%">
+              <tr>
+                <td class="force-col" valign="top" align="center" style="background:#000000;">&nbsp;</td>
+                <td class="force-col" valign="top" align="center" style="background:#111111;">&nbsp;</td>
+                <td class="force-col" valign="top" align="center" style="background:#222222;">&nbsp;</td>
+                <td class="force-col" valign="top" align="center" style="background:#333333;">&nbsp;</td>
+                <td class="force-col" valign="top" align="center" style="background:#444444;">&nbsp;</td>
+              </tr>
+            </table><!--/ end .columns-container-->
+          </td>
+        </tr>
+
+        <tr>
+          <td class="container-padding" bgcolor="#e9e9e9" style="background-color: #e9e9e9; font-size: 13px; line-height: 20px; font-family: Helvetica, sans-serif; color: #333;">
+            &nbsp;
+          </td>
+        </tr>
+
+        <tr>
+          <td class="container-header" bgcolor="#e9e9e9" style="background-color:#e9e9e9; font-family: Helvetica, sans-serif; color: #999; font-size:11px; line-height: 32px;" align="center" valign="top">
+            <img src="http://www.whale.im/img/mail-resources/whale-logotype.png" alt="Whale" /> is brought to you by <img src="http://www.whale.im/img/mail-resources/plasticpanda-logotype.png" alt="Plasticpanda" />
+          </td>
+        </tr>
+
+      </table>
+      <!--/500px container -->
+
+    </td>
+  </tr>
+</table>
+<!--/100% wrapper-->
+<br>
+<br>
+</body>
 </html>
