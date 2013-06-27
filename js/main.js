@@ -59,14 +59,25 @@
     var mail = hash[0]
       , token = hash[1];
     
-    microAjax('http://api.whale.im/?meta=1&email=' + mail, function (res) {
+    microAjax('http://api.whale.im/?meta=1&email=' + mail, function (res, status) {
 
-      // Set Palette and Values
-      resultBuilder(JSON.parse(res));
+      if (status === 200) {
+        // Checking if everything is OK [status = 200]
+        
+        // Set Palette and Values
+        resultBuilder(JSON.parse(res));
 
-      result.style.opacity = 1;
+        result.style.opacity = 1;
 
-      barAnimator();
+        barAnimator();
+
+      } else {
+        // There was en error...
+
+        window.location.href = 'http://www.whale.im';
+
+      }
+
 
     });
 
@@ -86,19 +97,31 @@
       document.querySelector('#pattern [type="submit"]').setAttribute('disabled', 'disabled');
       document.querySelector('#pattern [type="submit"]').classList.add('loading');
 
-      microAjax('http://api.whale.im/?meta=1&email=' + document.querySelector('#pattern [type="email"]').value, function (res) {
+      microAjax('http://api.whale.im/?meta=1&email=' + document.querySelector('#pattern [type="email"]').value, function (res, status) {
 
-        // Set Palette and Values
-        resultBuilder(JSON.parse(res));
+        if (status === 200) {
+          // Checking if everything is OK [status = 200]
+          
+          // Set Palette and Values
+          resultBuilder(JSON.parse(res));
 
-        pattern.style.top = - document.body.clientHeight + 'px';
-        setTimeout(function () {
-          pattern.parentNode.removeChild(pattern);
-        }, 800);
+          pattern.style.top = - document.body.clientHeight + 'px';
+          setTimeout(function () {
+            pattern.parentNode.removeChild(pattern);
+          }, 800);
 
-        result.style.opacity = 1;
+          result.style.opacity = 1;
 
-        barAnimator();
+          barAnimator();
+          
+        } else {
+          // There was en error...
+          
+          document.querySelector('#pattern [type="email"]').removeAttribute('disabled');
+          document.querySelector('#pattern [type="submit"]').removeAttribute('disabled');
+          document.querySelector('#pattern [type="submit"]').classList.remove('loading');
+        }
+
 
       });
 
