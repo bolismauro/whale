@@ -92,6 +92,8 @@ function get(req, res, next) {
       clog.debug('force', force, doc.token);
       
       if (force && force === doc.token) {
+        req.doNotSendEmail = true;
+        
         db.destroy(doc._id, doc._rev, function (err) {
           if (err) {
             return next(err);
@@ -182,6 +184,10 @@ function generate(req, res) {
     },
     
     function _sendmail(key, doc, url, done) {
+      if (req.doNotSendEmail === true) {
+        return done(null, key, doc, url);
+      }
+      
       fs.readFile('mail_template.html', { encoding: 'utf8' }, function (err, template) {
         if (err) {
           return done(err);
