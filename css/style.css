@@ -242,9 +242,69 @@ body #result .preview input {
   border-bottom-right-radius: 5px;
   padding: 15px;
   margin-left: -4px;
-  width: 420px;
+  width: 430px;
   text-align: center;
   cursor: pointer;
+}
+html #result .preview button.reborn,
+body #result .preview button.reborn {
+  background: #fff;
+  -webkit-border-top-left-radius: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border: none;
+  -webkit-box-shadow: 5px 0 5px -5px rgba(51,51,51,0.2);
+  box-shadow: 5px 0 5px -5px rgba(51,51,51,0.2);
+  color: #333;
+  text-shadow: none;
+  font-weight: 600;
+  width: 60px;
+  height: 50px;
+  margin-left: -10px;
+  text-align: center;
+  position: relative;
+  outline: none;
+}
+html #result .preview button.reborn img,
+body #result .preview button.reborn img {
+  border: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  margin: 0;
+  width: 32px;
+  height: 32px;
+  opacity: 0.3;
+  filter: alpha(opacity=30);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";
+  -webkit-transition: opacity 0.3s ease;
+  -moz-transition: opacity 0.3s ease;
+  -o-transition: opacity 0.3s ease;
+  -ms-transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease;
+}
+html #result .preview button.reborn:hover img,
+body #result .preview button.reborn:hover img {
+  opacity: 0.6;
+  filter: alpha(opacity=60);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)";
+}
+html #result .preview button.reborn[disabled],
+body #result .preview button.reborn[disabled] {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+html #result .preview button.reborn[disabled] img,
+body #result .preview button.reborn[disabled] img {
+  opacity: 0.3 !important;
+  filter: alpha(opacity=30) !important;
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=30)" !important;
+  -webkit-animation: loopcircle 0.5s infinite linear;
+  -moz-animation: loopcircle 0.5s infinite linear;
+  -o-animation: loopcircle 0.5s infinite linear;
+  -ms-animation: loopcircle 0.5s infinite linear;
+  animation: loopcircle 0.5s infinite linear;
 }
 html #result img.footer,
 body #result img.footer {
@@ -260,7 +320,7 @@ body #result img.footer {
 html #result ul.social-share,
 body #result ul.social-share {
   margin: 0;
-  margin-right: 450px;
+  margin-right: 460px;
   list-style: none;
 }
 html #result ul.social-share li,
@@ -299,4 +359,93 @@ body #result ul.social-share li:hover a img.social-facebook {
 html #result ul.social-share li:hover a img.social-twitter,
 body #result ul.social-share li:hover a img.social-twitter {
   background: #32ceff;
+}
+html #result.renew ul.social-share,
+body #result.renew ul.social-share {
+  margin-right: 515px;
+}
+@-moz-keyframes loopcircle {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(359deg);
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -ms-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@-webkit-keyframes loopcircle {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(359deg);
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -ms-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@-o-keyframes loopcircle {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(359deg);
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -ms-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@-ms-keyframes loopcircle {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(359deg);
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -ms-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+@keyframes loopcircle {
+  0% {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(359deg);
+    -moz-transform: rotate(359deg);
+    -o-transform: rotate(359deg);
+    -ms-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
 }

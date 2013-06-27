@@ -3,16 +3,23 @@
 (function () {
 
   'use strict';
+  
+  NodeList.prototype.forEach = Array.prototype.forEach; 
+  HTMLCollection.prototype.forEach = Array.prototype.forEach;
 
   var pattern = document.querySelector('#pattern')
     , result = document.querySelector('#result')
     , form = document.querySelector('#gowhale')
+    , preview = document.querySelector('.preview')
     ;
 
 
   var resultBuilder = function (data) {
-    document.querySelector('.preview img').setAttribute('src', 'data:image/png;base64,' + data.meta.base64);
-    document.querySelector('.preview input').value = data.url;
+    preview.querySelector('img').setAttribute('src', 'data:image/png;base64,' + data.meta.base64);
+    preview.querySelector('input').value = data.url;
+    preview.querySelector('input').addEventListener('click', function () {
+      this.select();
+    }, false);
 
     // Generating Palette Bar
     data.meta.palette.forEach(function (e) {
@@ -28,17 +35,16 @@
     var timer = 800
       , palettes = document.querySelectorAll('.palette-bar');
 
-    // Optimize Me!! 
-    for (var index = 0; index < palettes.length; index++) {
-      (function () {
-        var i = index;
+    // Optimize Me!!
+    palettes.forEach(function (e, index) {
+      var i = index;
 
-        setTimeout(function () {
-          palettes[i].style.width = 100 - 100 / palettes.length * i + '%';
-        }, timer - i * 100);
+      setTimeout(function () {
+        palettes[i].style.width = 100 - 100 / palettes.length * i + '%';
+      }, timer - i * 100);
 
-      })();
-    }
+    });
+
   };
 
 
@@ -66,6 +72,50 @@
         
         // Set Palette and Values
         resultBuilder(JSON.parse(res));
+
+        result.classList.add('renew');
+
+        var reborn = document.createElement('button');
+        reborn.setAttribute('title', 'Generate a new Avatar');
+        reborn.classList.add('btn');
+        reborn.classList.add('reborn');
+        reborn.innerHTML = '<img src="img/reborn.svg" />';
+        reborn.addEventListener('click', function (e) {
+
+          document.querySelector('.reborn').setAttribute('disabled', 'disabled');
+
+          microAjax('http://api.whale.im/?meta=1&force=' + token + '&email=' + mail, function (res, status) {
+
+            if (status === 200) {
+              // Checking if everything is OK [status = 200]
+
+              var currentPalettes = document.querySelectorAll('.palette-bar');
+              currentPalettes.forEach(function (e) {
+                e.style.width = '100%';
+              });              
+
+              setTimeout(function () {
+                document.querySelector('.reborn').removeAttribute('disabled');
+
+                setTimeout(function () {
+                  currentPalettes.forEach(function (e) {
+                    e.parentNode.removeChild(e);
+                  });
+
+                  // Set Palette and Values
+                  resultBuilder(JSON.parse(res));
+                  barAnimator();
+
+                }, 200);
+
+              }, 600);              
+
+            }
+
+          });
+        });
+
+        preview.appendChild(reborn);
 
         result.style.opacity = 1;
 
@@ -113,7 +163,7 @@
           result.style.opacity = 1;
 
           barAnimator();
-          
+
         } else {
           // There was en error...
           
@@ -128,19 +178,6 @@
       return false;
 
     }, false);
-
-
-    document.querySelector('.preview input').addEventListener('click', function () {
-      this.select();
-    }, false);
-
-
-    window.addEventListener('resize', function () {
-      var h = document.body.clientHeight + 'px';
-
-      pattern.style.height = h;
-      result.style.height = h;
-    });
 
     pattern.style.opacity = 1;
     

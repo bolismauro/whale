@@ -174,9 +174,42 @@ body
         border-radius right 5px
         padding 15px
         margin-left -4px
-        width 420px
+        width 430px
         text-align center
         cursor pointer
+
+      button.reborn
+        background #FFFFFF
+        border-radius left 0
+        border none
+        box-shadow 5px 0 5px -5px rgba(_dark, 0.2)
+        color _dark
+        text-shadow none
+        font-weight 600
+        width 60px
+        height 50px
+        margin-left -10px
+        text-align center
+        position relative
+        outline none
+        img
+          border none
+          box-shadow none
+          margin 0
+          width 32px
+          height 32px
+          opacity 0.3
+          transition opacity 0.3s ease
+        &:hover
+          img
+            opacity 0.6
+
+        &[disabled]
+          opacity 1
+          img
+            opacity 0.3 !important
+            animation loopcircle 0.5s infinite linear
+
 
     img.footer
       width 80px
@@ -190,7 +223,7 @@ body
 
     ul.social-share
       margin 0
-      margin-right 450px
+      margin-right 460px
       list-style none
       li
         display inline-block
@@ -213,3 +246,13 @@ body
               background #3b5999
             img.social-twitter
               background #32ceff
+
+    &.renew
+      ul.social-share
+        margin-right 515px
+
+@keyframes loopcircle
+  0%
+    transform rotate(0deg)
+  100%
+    transform rotate(359deg)
