@@ -1,157 +1,126 @@
-/*jshint browser:true, indent:2, laxcomma:true, jquery:true */
+/*jshint browser:true, indent:2, laxcomma:true, loopfunc: true */
 
-$(function () {
+(function () {
 
   'use strict';
+
+  var pattern = document.querySelector('#pattern')
+    , result = document.querySelector('#result')
+    , form = document.querySelector('#gowhale')
+    ;
+
+
+  var resultBuilder = function (data) {
+    document.querySelector('.preview img').setAttribute('src', 'data:image/png;base64,' + data.meta.base64);
+    document.querySelector('.preview input').value = data.url;
+
+    // Generating Palette Bar
+    data.meta.palette.forEach(function (e) {
+      var palette = document.createElement('div');
+      palette.classList.add('palette-bar');
+      palette.style.backgroundColor = e;
+      result.insertBefore(palette, result.firstChild);
+    });
+  };
+
+
+  var barAnimator = function () {
+    var timer = 800
+      , palettes = document.querySelectorAll('.palette-bar');
+
+    // Optimize Me!! 
+    for (var index = 0; index < palettes.length; index++) {
+      (function () {
+        var i = index;
+
+        setTimeout(function () {
+          palettes[i].style.width = 100 - 100 / palettes.length * i + '%';
+        }, timer - i * 100);
+
+      })();
+    }
+  };
+
 
   // Allow Editing Hash type http://www.whale.im/#{mail}|{token}
   var hash = window.location.hash;
 
   if (hash) {
-    console.log('Hash', decodeURIComponent(window.location.hash));
+
+    // Cleaning some nodes
+    pattern.parentNode.removeChild(pattern);
+
+    // TODO
+    // Adding a loading animation on the page
     
     hash = decodeURIComponent(window.location.hash);
     hash = hash.replace('#', '').split('|');
     
     var mail = hash[0]
       , token = hash[1];
-
-    console.log('Split', mail, token);
     
-    $.ajax({
-      type: 'GET',
-//      url: 'http://api.whale.im/?meta=1&email=' + mail + '&force=' + token,
-      url: 'http://api.whale.im/?meta=1&email=' + mail,
-      dataType: 'json',
-      success: function(data) {
-        //console.log('Success', data);
+    microAjax('http://api.whale.im/?meta=1&email=' + mail, function (res) {
 
-        $('.preview img').attr('src', 'data:image/png;base64,' + data.meta.base64);
-        $('.preview input').val(data.url);
+      // Set Palette and Values
+      resultBuilder(JSON.parse(res));
 
-        // Generating Palette Bar
-        data.meta.palette.forEach(function (e) {
-          $('<div class="palette-bar" />').css('background-color', e).prependTo($('#result'));
-        });
+      result.style.opacity = 1;
 
-        // Scroll down!
-        //scrollHandler.mCustomScrollbar('scrollTo', $('#result').position().top);
-        $('#pattern').css('top', -document.body.clientHeight);
-        setTimeout(function () {
-          $('#pattern').remove();
-        }, 800);
-
-
-        $('#result').css('opacity', 1);
-        
-
-        var timer = 800;
-
-        $('.palette-bar').each(function () {
-          var $bar = $(this)
-            , index = $bar.index()
-            , len = $('.palette-bar').size()
-            , t = timer;
-
-          timer = timer - 100;
-
-          setTimeout(function () {      
-            //console.log('bar', $bar, 100 - 100 / len * index + '%');
-            $bar.css('width', 100 - 100 / len * index + '%');
-          }, t);
-        });
-
-      },
-      error: function (data) {
-        throw new Error('Error' + JSON.stringify(data));
-      }
+      barAnimator();
 
     });
 
   } else {
     
     // Enable inputs on page load (need this for Firefox)
-    $('[type="submit"]').removeAttr('disabled');
-    $('[type="email"]').removeAttr('disabled');
+    document.querySelector('#pattern [type="submit"], #pattern [type="email"]').removeAttribute('disabled');
 
-
-    $('#gowhale').on('submit', function (e) {
-
-      var $form = $(this);
-      
-      $('[type="submit"]').addClass('loading').attr('disabled', 'disabled');
-      $('[type="email"]').attr('disabled', 'disabled');
-
-      $.ajax({
-        type: 'GET',
-        url: 'http://api.whale.im/?meta=1&email=' + $('#mailaddress').val(),
-        dataType: 'json',
-        success: function(data) {
-          //console.log('Success', data);
-
-          $('.preview img').attr('src', 'data:image/png;base64,' + data.meta.base64);
-          $('.preview input').val(data.url);
-
-          // Generating Palette Bar
-          data.meta.palette.forEach(function (e) {
-            $('<div class="palette-bar" />').css('background-color', e).prependTo($('#result'));
-          });
-
-          // Scroll down!
-          //scrollHandler.mCustomScrollbar('scrollTo', $('#result').position().top);
-          $('#pattern').css('top', -document.body.clientHeight);
-          setTimeout(function () {
-            $('#pattern').remove();
-          }, 800);
-
-
-          $('#result').css('opacity', 1);
-          
-
-          var timer = 800;
-
-          $('.palette-bar').each(function () {
-            var $bar = $(this)
-              , index = $bar.index()
-              , len = $('.palette-bar').size()
-              , t = timer;
-
-            timer = timer - 100;
-
-            setTimeout(function () {      
-              //console.log('bar', $bar, 100 - 100 / len * index + '%');
-              $bar.css('width', 100 - 100 / len * index + '%');
-            }, t);
-          });
-
-        },
-        error: function (data) {
-          throw new Error('Error' + JSON.stringify(data));
-        }
-
-      });    
-
+    form.addEventListener('submit', function (e) {
 
       e.preventDefault();
       e.stopPropagation();
+
+      var form = e.target;
+      
+      document.querySelector('#pattern [type="email"]').setAttribute('disabled', 'disabled');
+      document.querySelector('#pattern [type="submit"]').setAttribute('disabled', 'disabled');
+      document.querySelector('#pattern [type="submit"]').classList.add('loading');
+
+      microAjax('http://api.whale.im/?meta=1&email=' + document.querySelector('#pattern [type="email"]').value, function (res) {
+
+        // Set Palette and Values
+        resultBuilder(JSON.parse(res));
+
+        pattern.style.top = - document.body.clientHeight + 'px';
+        setTimeout(function () {
+          pattern.parentNode.removeChild(pattern);
+        }, 800);
+
+        result.style.opacity = 1;
+
+        barAnimator();
+
+      });
+
       return false;
 
-    });
+    }, false);
 
 
-    $('.preview input').on('click', function () {
+    document.querySelector('.preview input').addEventListener('click', function () {
       this.select();
+    }, false);
+
+
+    window.addEventListener('resize', function () {
+      var h = document.body.clientHeight + 'px';
+
+      pattern.style.height = h;
+      result.style.height = h;
     });
 
-
-    $(window).on('resize', function () {
-      $('.page').css('height', document.body.clientHeight);
-    });
-
-    $(window).trigger('resize');
+    pattern.style.opacity = 1;
     
-    $('#pattern').css('opacity', 1);
-  
   }
 
-});
+})();
