@@ -134,7 +134,8 @@
   } else {
     
     // Enable inputs on page load (need this for Firefox)
-    document.querySelector('#pattern [type="submit"], #pattern [type="email"]').removeAttribute('disabled');
+    document.querySelector('#pattern [type="submit"]').removeAttribute('disabled');
+    document.querySelector('#pattern [type="email"]').removeAttribute('disabled');
 
     form.addEventListener('submit', function (e) {
 
