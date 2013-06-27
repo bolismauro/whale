@@ -265,6 +265,7 @@ body #result .preview button.reborn {
   text-align: center;
   position: relative;
   outline: none;
+  cursor: pointer;
 }
 html #result .preview button.reborn img,
 body #result .preview button.reborn img {
