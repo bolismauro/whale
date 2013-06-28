@@ -31,6 +31,7 @@ var AWS_ACCESS_KEY_ID = process.config.AWS_ACCESS_KEY_ID
   , DATABASE_URL = process.config.DATABASE_URL
   , CDN_DOMAIN = process.config.CDN_DOMAIN
   , POSTMARK_APIKEY = process.config.POSTMARK_APIKEY
+  , POSTMARK_FROM = process.config.POSTMARK_FROM
   , WHALE_API_ENDPOINT = 'http://api.whale.im'; //@TODO: move to config
 
 
@@ -198,7 +199,7 @@ function generate(req, res) {
         var url_no_cache = url + '?r=' + Math.random();
         
         postmark.send({
-          From: 'hello@plasticpanda.com',
+          From: POSTMARK_FROM,
           To: doc.email,
           Subject: 'whale.im | You are now sailing the sea!',
           HtmlBody: handlebars.compile(template)({ email: doc.email, url: url_no_cache, token: doc.token, palette: doc.meta.palette })
