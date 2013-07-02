@@ -5,9 +5,9 @@ block content
   #pattern.page
     .page-container
       .page-text
-        p.text-center
+        p.text-center.to-twocol
           img.logo(src='img/whale-logo.svg')
-        p.text-center
+        p.text-center.to-twocol.to-alignleft
           small a random Avatar generator
           br
           | for everyone on the <b>Earth</b>!
@@ -25,9 +25,10 @@ block content
 
         .bigspacer
 
-        p.text-center
+        p.text-center.to-smaller
           span
             | Developer? 
+            span.to-br
             a(href='https://github.com/plasticpanda/whale/wiki/whale.im-API', target='_blank') Whale API Docs
             |  are here!
 
@@ -37,14 +38,14 @@ block content
     .page-container
       .page-text
         .page-bar
-          .container
+          .container-fluid
             .row-fluid
               .span12
                 p.preview
                   img(src='')
                   input(value='', readonly, title='Click to select')
 
-            .row-fluid
+            .row-fluid.to-hide
               .span12.text-center
                 ul.social-share
                   li

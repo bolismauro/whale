@@ -365,6 +365,100 @@ html #result.renew ul.social-share,
 body #result.renew ul.social-share {
   margin-right: 515px;
 }
+@media all and (max-device-width: 400px) {
+  body #pattern {
+    overflow: hidden;
+  }
+  body #pattern img.logo {
+    width: 120px;
+  }
+  body #pattern form fieldset .input-append {
+    display: block;
+  }
+  body #pattern form fieldset input {
+    display: block;
+    width: 90%;
+    margin: 0;
+    padding-left: 5%;
+    padding-right: 5%;
+    border: none;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    -webkit-border-top-left-radius: 5px;
+    border-top-left-radius: 5px;
+    -webkit-border-top-right-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+  body #pattern form fieldset button {
+    display: block;
+    width: 100%;
+    margin: 0;
+    padding-left: 0;
+    padding-right: 0;
+    border: none;
+    border-top: 1px solid #1b9ece;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+    -webkit-border-bottom-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+  body #pattern .bigspacer {
+    height: 30px;
+  }
+  body #pattern p.to-smaller {
+    font-size: 14px;
+    line-height: 20px;
+  }
+  body span.to-br {
+    display: block;
+    height: 10px;
+  }
+  body #result .to-hide {
+    display: none;
+  }
+  body #result .preview {
+    padding-bottom: 60px;
+  }
+  body #result .preview img {
+    display: block;
+    margin: auto;
+    margin-bottom: 10px;
+  }
+  body #result .preview input {
+    display: block;
+    margin: 0;
+    width: 95%;
+    padding-right: 5%;
+    padding-left: 5%;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+  }
+}
+@media all and (max-device-width: 400px) and (orientation:landscape) {
+  body #pattern .to-twocol {
+    width: 49%;
+    display: inline-block;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 5px;
+    vertical-align: top;
+  }
+  body #pattern .to-alignleft {
+    text-align: left;
+    padding-top: 10px;
+  }
+  body #pattern .spacer {
+    height: 1px;
+  }
+  body #pattern .bigspacer {
+    height: 1px;
+  }
+  body #pattern span.to-br {
+    display: none;
+  }
+}
 @-moz-keyframes loopcircle {
   0% {
     -webkit-transform: rotate(0deg);

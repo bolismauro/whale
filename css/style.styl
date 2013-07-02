@@ -257,3 +257,82 @@ body
     transform rotate(0deg)
   100%
     transform rotate(359deg)
+
+@media all and (max-device-width: 400px)
+  body
+    #pattern
+      overflow hidden
+      img.logo
+        width 120px
+      form
+        fieldset
+          .input-append
+            display block
+          input
+            display block
+            width 90%
+            margin 0
+            padding-left 5%
+            padding-right 5%
+            border none
+            border-radius 0
+            border-radius top 5px
+          button
+            display block
+            width 100%
+            margin 0
+            padding-left 0
+            padding-right 0
+            border none
+            border-top 1px solid _cyan
+            border-radius 0
+            border-radius bottom 5px
+
+      .bigspacer
+        height 30px
+
+      p.to-smaller
+        font-size 14px
+        line-height 20px
+
+    span.to-br
+      display block
+      height 10px
+
+    #result
+      .to-hide
+        display none
+
+      .preview
+        padding-bottom 60px
+        img
+          display block
+          margin auto
+          margin-bottom 10px
+        input
+          display block
+          margin 0
+          width 95%
+          padding-right 5%
+          padding-left 5%
+          border-radius 5px
+
+@media all and (max-device-width: 400px) and (orientation:landscape)
+  body
+    #pattern
+      .to-twocol
+        width 49%
+        display inline-block
+        margin-left 0
+        margin-right 0
+        margin-top 5px
+        vertical-align top
+      .to-alignleft
+        text-align left
+        padding-top 10px
+      .spacer
+        height 1px
+      .bigspacer
+        height 1px
+      span.to-br
+        display none
