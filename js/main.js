@@ -18,7 +18,9 @@
     preview.querySelector('img').setAttribute('src', 'data:image/png;base64,' + data.meta.base64);
     preview.querySelector('input').value = data.url;
     preview.querySelector('input').addEventListener('click', function () {
-      this.select();
+      if (!(window.screen.availWidth <= 320)) {
+        this.select();
+      }
     }, false);
 
     // Generating Palette Bar
