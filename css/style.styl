@@ -312,10 +312,12 @@ body
         input
           display block
           margin 0
-          width 95%
-          padding-right 5%
-          padding-left 5%
+          width 100%
+          padding-right 0
+          padding-left 0
           border-radius 5px
+          font-size 9px
+          text-align center
 
 @media all and (max-device-width: 400px) and (orientation:landscape)
   body
@@ -336,3 +338,19 @@ body
         height 1px
       span.to-br
         display none
+
+    #result
+      .preview
+        position relative
+        padding-bottom 60px
+        img
+          position absolute
+          left 10px
+          top -30px
+        input
+          text-indent 105px
+          text-align left
+          width 95%
+          margin-left 5%
+          font-size 10px
+
