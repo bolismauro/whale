@@ -3,7 +3,8 @@
 'use strict';
 
 
-var clog = require('clog')
+var coolog = require('coolog')
+  , logger = coolog.logger('main.js', true)
   , async = require('async')
   , eenv = require('eenv')
   , random = require('node-random')
@@ -19,13 +20,14 @@ var clog = require('clog')
   , ApollonianGasket = require('./lib/ApollonianGasket')
   , utils = require('./lib/utils');
 
+
 require('string-format');
 require('sugar');
 require('colors');
 
-eenv.loadSync({ keyfile: process.env.EENV_KEY });
+//eenv.loadSync({ keyfile: process.env.EENV_KEY });
 
-var AWS_ACCESS_KEY_ID = process.config.AWS_ACCESS_KEY_ID
+/*var AWS_ACCESS_KEY_ID = process.config.AWS_ACCESS_KEY_ID
   , AWS_SECRET_ACCESS_KEY = process.config.AWS_SECRET_ACCESS_KEY
   , AWS_BUCKET = process.config.AWS_BUCKET
   , DATABASE_URL = process.config.DATABASE_URL
@@ -39,18 +41,19 @@ var AWS_ACCESS_KEY_ID = process.config.AWS_ACCESS_KEY_ID
 AWS.config.update({ accessKeyId: AWS_ACCESS_KEY_ID, secretAccessKey: AWS_SECRET_ACCESS_KEY });
 AWS.config.update({ region: 'eu-west-1' });
 s3client = new AWS.S3();
+*/
 
-
-var s3client
-  , db = nano(DATABASE_URL)
-  , postmark = postmark(POSTMARK_APIKEY)
-  , app = connect()
+var //s3client
+  //, db = nano(DATABASE_URL)
+  //, postmark = postmark(POSTMARK_APIKEY)
+  //, 
+  app = connect()
       .use(connect.query())
       .use(connect.responseTime())
       .use(utils.allowCORS())
       .use(validate)
-      .use(get)
-      .use(generate);
+      //.use(get)
+      .use(generateWithFlickr);
 
 
 http.createServer(app).listen(process.env.PORT || 3000);
@@ -72,26 +75,24 @@ function validate(req, res, next) {
   }
 }
 
-
-function get(req, res, next) {
+/*function get(req, res, next) {
   var email = req.query.email
     , printUrl = !!req.query.url
     , printMeta = !!req.query.meta
     , force = req.query.force
     , key = utils.makeKey(email)
     , url;
-    
   db.get(key, function (err, doc) {
     if (err) {
       if (err && err.status_code === 404) {
-        clog.info('Generating new avatar for key', key);
+        logger.info('Generating new avatar for key', key);
         next();
       } else {
-        clog.error('CouchDB.get Error', err);
+        logger.error('CouchDB.get Error', err);
         next(err);
       }
     } else {
-      clog.debug('force', force, doc.token);
+      logger.debug('force', force, doc.token);
       
       if (force && force === doc.token) {
         req.doNotSendEmail = true;
@@ -122,9 +123,22 @@ function get(req, res, next) {
       }
     }
   });
+}*/
+
+function generateWithFlickr(req, res, next) {
+  var email = req.query.email
+    , printUrl = !!req.query.url
+    , printMeta = !!req.query.meta
+    , force = req.query.force;
+
+  _generateHelper(function (err, imageRes) {
+    res.writeHead(200, {'Content-Type': 'image/png'});
+    res.write(imageRes.buffer);
+    res.end();
+  });
 }
 
-
+/*
 function generate(req, res) {
   var email = req.query.email
     , printUrl = !!req.query.url
@@ -151,7 +165,7 @@ function generate(req, res) {
         ContentType: 'image/png'
       }, function (err, body) {
         if (err) {
-          clog.error('Error uploading image to S3', err);
+          logger.error('Error uploading image to S3', err);
           return done(err);
         }
         
@@ -177,7 +191,7 @@ function generate(req, res) {
       
       db.insert(doc, key, function (err) {
         if (err) {
-          clog.error('Error saving document to CouchDB', err);
+          logger.error('Error saving document to CouchDB', err);
           return done(err);
         }
         
@@ -215,7 +229,7 @@ function generate(req, res) {
     
   ], function (err, key, doc, url) {
     if (err) {
-      clog.error('Error', err);
+      logger.error('Error', err);
       throw err;
     }
     
@@ -232,11 +246,11 @@ function generate(req, res) {
       utils.redirectKey(res, url);
     }
     
-    clog.ok('Done');
+    logger.ok('Done');
   });
 
 }
-
+*/
 
 function _generateHelper(callback) {
   var palette
@@ -254,16 +268,76 @@ function _generateHelper(callback) {
     },
     
     colors: function (done) {
-      http.get('http://www.colourlovers.com/api/palettes/random?format=json', function (res) {
-        res.on('data', function (data) {
-          var body = JSON.parse(data.toString('utf8'))
-            , colors = body[0].colors.map(function (row) { return '#' + row; });
-            
-          done(null, colors);
+      http.get(utils.getFlickrSearchUrl(), function (res) {
+        var data = ''
+          , palette = require('palette')
+          , Canvas = require('canvas')
+          , Image = Canvas.Image
+          , canvas = new Canvas()
+          , ctx = canvas.getContext('2d')
+          , photoUrl;
+        
+        res.on('data', function (chunk) {
+          data = data + chunk;
         });
         
-      }).on('error', function (err) {
-        done(err);
+        res.on('end', function () {
+          var photos = JSON.parse(data.toString('utf8')).photos
+            , photoInfo;
+
+          photoInfo = photos.photo[Math.floor(Math.random() * photos.photo.length -1)];
+
+          photoUrl = utils.createFlickrUrl(photoInfo);
+          logger.info(photoUrl);
+
+          http.get(photoUrl, function (imageRes) {
+            var imageData = [];
+            
+            imageRes.setEncoding('binary');
+            
+            imageRes.on('data', function (chunk) {
+              imageData.push(chunk);
+            });
+
+            imageRes.on('end', function () {
+              var img = new Image()
+                , colors = [];
+
+              img.onload = function () {
+                console.log('image loaded');
+                canvas.width = img.width;
+                canvas.height = img.height;
+                ctx.drawImage(img, 0, 0);
+                console.log('calculating palette');
+                var temp = palette(canvas, 5);
+                temp.forEach(function (color) {
+                  var r = color[0]
+                    , g = color[1]
+                    , b = color[2]
+                    , val = r << 16 | g << 8 | b
+                    , str = '#' + val.toString(16);
+
+                  colors.push(str);
+                });
+                console.log(colors);
+                done(null, colors);
+              };
+
+              img.onerror = function (e) {
+                console.log("error ", e);
+                done(null, undefined);
+              };
+
+              imageData = imageData.join('');
+              img.src = new Buffer(imageData, 'binary');
+            
+            });
+          });
+        });
+
+        res.on('error', function (err) {
+          done(err);
+        });
       });
     }
     
@@ -272,8 +346,8 @@ function _generateHelper(callback) {
       callback(err);
     }
     
-    clog.info('Got random', data.random[0]);
-    clog.info('Got colors', data.colors);
+    logger.info('Got random', data.random[0]);
+    logger.info('Got colors', data.colors);
     
     apollo = new ApollonianGasket({
       size: size

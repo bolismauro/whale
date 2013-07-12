@@ -33,6 +33,8 @@
     "postmark": "~0.1.8",
     "uuid": "~1.4.1",
     "string-format": "~0.2.1",
-    "handlebars": "~1.0.12"
+    "handlebars": "~1.0.12",
+    "coolog": "~0.3.0",
+    "palette": "0.0.1"
   }
 }
